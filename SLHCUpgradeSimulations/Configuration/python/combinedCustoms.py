@@ -158,7 +158,16 @@ def cust_2023SHCal(process):
         process.pfClusteringEK += process.particleFlowClusterECAL
         process.particleFlowClusterECAL.inputECAL = cms.InputTag('particleFlowClusterEBEKMerger')
         process.particleFlowCluster += process.pfClusteringEK
-       
+        process.towerMaker.ecalInputs = cms.VInputTag(cms.InputTag("ecalRecHit","EcalRecHitsEB"), cms.InputTag("ecalRecHit","EcalRecHitsEK"))
+        process.towerMakerPF.ecalInputs = cms.VInputTag(cms.InputTag("ecalRecHit","EcalRecHitsEB"), cms.InputTag("ecalRecHit","EcalRecHitsEK"))
+        process.towerMakerWithHO.ecalInputs = cms.VInputTag(cms.InputTag("ecalRecHit","EcalRecHitsEB"), cms.InputTag("ecalRecHit","EcalRecHitsEK"))
+        process.towerMaker.EESumThreshold = cms.double(0.1)
+        process.towerMakerPF.EESumThreshold = cms.double(0.1)
+        process.towerMakerWithHO.EESumThreshold = cms.double(0.1)
+        process.towerMaker.EEThreshold = cms.double(0.035)
+        process.towerMakerPF.EEThreshold = cms.double(0.035)
+        process.towerMakerWithHO.EEThreshold = cms.double(0.035)
+
     return process
 
 def cust_2023HGCal(process):
@@ -177,6 +186,14 @@ def cust_2023HGCal(process):
         process.mix.digitizers.hgceeDigitizer=process.hgceeDigitizer
         process.mix.digitizers.hgchebackDigitizer=process.hgchebackDigitizer
         process.mix.digitizers.hgchefrontDigitizer=process.hgchefrontDigitizer
+        # Also need to tell the MixingModule to make the correct collections available from
+        # the pileup, even if not creating CrossingFrames.
+        process.mix.mixObjects.mixCH.input.append( cms.InputTag("g4SimHits",process.hgceeDigitizer.hitCollection.value()) )
+        process.mix.mixObjects.mixCH.input.append( cms.InputTag("g4SimHits",process.hgchebackDigitizer.hitCollection.value()) )
+        process.mix.mixObjects.mixCH.input.append( cms.InputTag("g4SimHits",process.hgchefrontDigitizer.hitCollection.value()) )
+        process.mix.mixObjects.mixCH.subdets.append( process.hgceeDigitizer.hitCollection.value() )
+        process.mix.mixObjects.mixCH.subdets.append( process.hgchebackDigitizer.hitCollection.value() )
+        process.mix.mixObjects.mixCH.subdets.append( process.hgchefrontDigitizer.hitCollection.value() )
     if hasattr(process,'reconstruction_step'):
         process.particleFlowCluster += process.particleFlowRecHitHGC
         process.particleFlowCluster += process.particleFlowClusterHGC
@@ -186,10 +203,10 @@ def cust_2023HGCal(process):
             process.particleFlowSuperClusterHGCEE.use_preshower = cms.bool(False)
             process.particleFlowSuperClusterHGCEE.PFSuperClusterCollectionEndcapWithPreshower = cms.string('')
             process.particleFlowCluster += process.particleFlowSuperClusterHGCEE
-            if hasattr(process,'ecalDrivenElectronSeeds'):
-                process.ecalDrivenElectronSeeds.endcapSuperClusters = cms.InputTag('particleFlowSuperClusterHGCEE')
+            #if hasattr(process,'ecalDrivenElectronSeeds'):
+            #    process.ecalDrivenElectronSeeds.endcapSuperClusters = cms.InputTag('particleFlowSuperClusterHGCEE')
         if hasattr(process,'particleFlowBlock'):
-            process.particleFlowBlock.elementImporters.append( cms.PSet( importerName = cms.string('GenericClusterImporter'),
+            process.particleFlowBlock.elementImporters.append( cms.PSet( importerName = cms.string('HGCECALClusterImporter'),
                                                                          source = cms.InputTag('particleFlowClusterHGCEE') ) )
             process.particleFlowBlock.elementImporters.append( cms.PSet( importerName = cms.string('GenericClusterImporter'),
                                                                          source = cms.InputTag('particleFlowClusterHGCHEF') ) )
@@ -204,6 +221,10 @@ def cust_2023HGCal(process):
             process.particleFlowBlock.linkDefinitions.append( cms.PSet( linkerName = cms.string('TrackAndHGCHEBLinker'),
                                                                         linkType = cms.string('TRACK:HGC_HCALB'),
                                                                         useKDTree = cms.bool(True) ) )
+            process.particleFlowBlock.linkDefinitions.append( cms.PSet( linkType = cms.string('SC:HGC_ECAL'),
+                                                                        SuperClusterMatchByRef = cms.bool(True),
+                                                                        useKDTree = cms.bool(False),
+                                                                        linkerName = cms.string('SCAndECALLinker') ) ) 
     #mod event content
     process.load('RecoLocalCalo.Configuration.hgcalLocalReco_EventContent_cff')
     if hasattr(process,'FEVTDEBUGHLTEventContent'):
@@ -228,6 +249,14 @@ def cust_2023HGCalMuon(process):
         process.mix.digitizers.hgceeDigitizer=process.hgceeDigitizer
         process.mix.digitizers.hgchebackDigitizer=process.hgchebackDigitizer
         process.mix.digitizers.hgchefrontDigitizer=process.hgchefrontDigitizer
+        # Also need to tell the MixingModule to make the correct collections available from
+        # the pileup, even if not creating CrossingFrames.
+        process.mix.mixObjects.mixCH.input.append( cms.InputTag("g4SimHits",process.hgceeDigitizer.hitCollection.value()) )
+        process.mix.mixObjects.mixCH.input.append( cms.InputTag("g4SimHits",process.hgchebackDigitizer.hitCollection.value()) )
+        process.mix.mixObjects.mixCH.input.append( cms.InputTag("g4SimHits",process.hgchefrontDigitizer.hitCollection.value()) )
+        process.mix.mixObjects.mixCH.subdets.append( process.hgceeDigitizer.hitCollection.value() )
+        process.mix.mixObjects.mixCH.subdets.append( process.hgchebackDigitizer.hitCollection.value() )
+        process.mix.mixObjects.mixCH.subdets.append( process.hgchefrontDigitizer.hitCollection.value() )
     if hasattr(process,'reconstruction_step'):
         process.particleFlowCluster += process.particleFlowRecHitHGC
         process.particleFlowCluster += process.particleFlowClusterHGC
@@ -237,10 +266,10 @@ def cust_2023HGCalMuon(process):
             process.particleFlowSuperClusterHGCEE.use_preshower = cms.bool(False)
             process.particleFlowSuperClusterHGCEE.PFSuperClusterCollectionEndcapWithPreshower = cms.string('')
             process.particleFlowCluster += process.particleFlowSuperClusterHGCEE
-            if hasattr(process,'ecalDrivenElectronSeeds'):
-                process.ecalDrivenElectronSeeds.endcapSuperClusters = cms.InputTag('particleFlowSuperClusterHGCEE')
+            #if hasattr(process,'ecalDrivenElectronSeeds'):
+            #    process.ecalDrivenElectronSeeds.endcapSuperClusters = cms.InputTag('particleFlowSuperClusterHGCEE')
         if hasattr(process,'particleFlowBlock'):
-            process.particleFlowBlock.elementImporters.append( cms.PSet( importerName = cms.string('GenericClusterImporter'),
+            process.particleFlowBlock.elementImporters.append( cms.PSet( importerName = cms.string('HGCECALClusterImporter'),
                                                                          source = cms.InputTag('particleFlowClusterHGCEE') ) )
             process.particleFlowBlock.elementImporters.append( cms.PSet( importerName = cms.string('GenericClusterImporter'),
                                                                          source = cms.InputTag('particleFlowClusterHGCHEF') ) )
@@ -255,6 +284,11 @@ def cust_2023HGCalMuon(process):
             process.particleFlowBlock.linkDefinitions.append( cms.PSet( linkerName = cms.string('TrackAndHGCHEBLinker'),
                                                                         linkType = cms.string('TRACK:HGC_HCALB'),
                                                                         useKDTree = cms.bool(True) ) )
+            process.particleFlowBlock.linkDefinitions.append( cms.PSet( linkType = cms.string('SC:HGC_ECAL'),
+                                                                        SuperClusterMatchByRef = cms.bool(True),
+                                                                        useKDTree = cms.bool(False),
+                                                                        linkerName = cms.string('SCAndECALLinker') ) )
+            
     #mod event content
     process.load('RecoLocalCalo.Configuration.hgcalLocalReco_EventContent_cff')
     if hasattr(process,'FEVTDEBUGHLTEventContent'):

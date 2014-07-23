@@ -39,6 +39,10 @@ void GEMStripDigiValidation::bookHisto(const GEMGeometry* geom) {
   }
   // All chamber XY (cm) plots
   //auto& chamber = theGEMGeometry
+  theSpecific_phiz[0] = dbe_->book2D("sp_strip_re-1_st1_ch1_2_roll1","sp_strip_re-1_st1_ch1_2_roll1",768, -5.,15.1,100,-575,-560);
+  theSpecific_phiz[1] = dbe_->book2D("sp_strip_re-1_st1_ch1_2_roll4","sp_strip_re-1_st1_ch1_2_roll4",768, -5.,15.1,100,-575,-560);
+  theSpecific_phiz[2] = dbe_->book2D("sp_strip_re-1_st1_ch1_2_roll8","sp_strip_re-1_st1_ch1_2_roll8",768, -5.,15.1,100,-575,-560);
+  theSpecific_phiz[3] = dbe_->book2D("sp_strip_re-1_st1_ch1_2","sp_strip_re-1_st1_ch1_2",768, -5.,15.1,100,-575,-560);
   for( auto& region : theGEMGeometry->regions() ) 
   for( auto& station : region->stations() ) { 
     std::stringstream ss1;
@@ -51,6 +55,8 @@ void GEMStripDigiValidation::bookHisto(const GEMGeometry* geom) {
     if ( station->station() == 1 ) st_temp = dbe_->book1D(ss1.str(),st_title,2000.,8.5,12.5);
     if ( station->station() == 2 || station->station() == 3 ) st_temp = dbe_->book1D(ss1.str(),st_title,2000.,18.5,22.5);
     theStrip_st_dphi.insert( std::map<std::string, MonitorElement*>::value_type(ss1.str(), st_temp ));
+    
+    
     for( auto& ring : station->rings() ) 
     for( auto& sCh : ring->superChambers() ) {
      //Double_t xmin = 9999;
@@ -181,10 +187,10 @@ void GEMStripDigiValidation::analyze(const edm::Event& e,
     Short_t layer = (Short_t) id.layer();
     Short_t station = (Short_t) id.station();
     Short_t chamber = (Short_t) id.chamber();
+    Short_t nroll = (Short_t) id.roll();
     
 
     GEMDigiCollection::const_iterator digiItr;
-    //loop over digis of given roll
     for (digiItr = (*cItr ).second.first; digiItr != (*cItr ).second.second; ++digiItr)
     {
       Short_t strip = (Short_t) digiItr->strip();
@@ -221,6 +227,12 @@ void GEMStripDigiValidation::analyze(const edm::Event& e,
       Float_t digi_phi = gp.phi().degrees();
       if ( digi_phi < GE11PhiBegin_  ) digi_phi = digi_phi+360.;
       theStrip_phiz_st_ch[name.str()]->Fill(digi_phi,g_z);
+      if ( region == -1 && station ==1 && ( chamber == 1 || chamber == 2 ) ) {
+        theSpecific_phiz[3]->Fill(digi_phi,g_z);
+        if( nroll == 1) theSpecific_phiz[0]->Fill(digi_phi,g_z);
+        else if( nroll == 4) theSpecific_phiz[1]->Fill(digi_phi,g_z);
+        else if( nroll == 8) theSpecific_phiz[2]->Fill(digi_phi,g_z);
+      }
    }
   }
 }

@@ -38,6 +38,8 @@ public:
   std::map< std::string, MonitorElement* > theStrip_ro_phi;
 	std::map< std::string, MonitorElement* > theStrip_st_dphi;
   std::map< std::string, MonitorElement* > theStrip_phiz_st_ch;
+  
+  MonitorElement* theSpecific_phiz[4];
 };
 
 #endif

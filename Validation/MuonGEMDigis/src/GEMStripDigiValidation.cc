@@ -148,10 +148,15 @@ void GEMStripDigiValidation::savePhiPlot(){
       name<<"strip_phi_dist_"<<name_prefix.str();
       double phi_0 = 0.0;
       double phi_max = 0.0;
+      double low_edge= roll->toGlobal( topology->localPosition( 0.0) ).phi().degrees();
       for( unsigned int i=0; i<=nStrips ; i++) {
         LocalPoint lEdgeN(topology->localPosition((float)i));
         double cstripN( roll->toGlobal( lEdgeN).phi().degrees());
-        if ( cstripN > TMath::Pi() - GE11PhiStep_ ) cstripN = cstripN-2*TMath::Pi();
+        double d_phi = cstripN- low_edge;
+        if ( TMath::Abs( d_phi ) > 2*GE11PhiStep_) {
+          if ( cstripN > 0)      cstripN  -= 360.;
+          else if ( cstripN < 0) cstripN += 360.;
+        }
         theStrip_ro_phi[name.str()]->Fill(i,cstripN);
         if ( i==0 ) phi_0 = cstripN;
         if ( i==nStrips ) phi_max = cstripN;

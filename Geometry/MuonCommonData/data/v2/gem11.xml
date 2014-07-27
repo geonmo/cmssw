@@ -899,7 +899,7 @@
     <Numeric name="stepAngle"   value="20*deg"/>
     <Numeric name="startAngle"  value="10*deg"/>
     <Numeric name="rPosition"   value="[rPos]"/>
-    <Numeric name="zoffset"     value="-27.90*mm"/>
+    <Numeric name="zoffset"     value="-28.90*mm"/>
 </Algorithm>
 <Algorithm name="muon:DDGEMAngular">
     <rParent name="gem11:GEMDisk11N"/>
@@ -951,7 +951,7 @@
     <Numeric name="stepAngle"   value="-20*deg"/>
     <Numeric name="startAngle"  value="170*deg"/>
     <Numeric name="rPosition"   value="[rPos]"/>
-    <Numeric name="zoffset"     value="-27.90*mm"/>
+    <Numeric name="zoffset"     value="-28.90*mm"/>
 </Algorithm>
 
 </DDDefinition>

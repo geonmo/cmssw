@@ -66,7 +66,8 @@ TProfile* MuonGEMDigis_Harvesting::ComputeEff(TH1F* num, TH1F* denum )
 	  const double nNum = num->GetBinContent(i);
     const double nDenum = denum->GetBinContent(i);
 
-    if ( nDenum == 0 || nNum > nDenum ) continue;
+    //if ( nDenum == 0 || nNum > nDenum ) continue;
+    if ( nDenum == 0 ) continue;
     if ( nNum == 0 ) continue;
     const double effVal = nNum/nDenum;
 

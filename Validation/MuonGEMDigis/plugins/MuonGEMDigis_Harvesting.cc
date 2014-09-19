@@ -60,28 +60,29 @@ TProfile* MuonGEMDigis_Harvesting::ComputeEff(TH1F* num, TH1F* denum )
 {
   std::string name  = "eff_"+std::string(num->GetName());
   std::string title = "Eff. "+std::string(num->GetTitle());
-  TProfile * efficHist = new TProfile(name.c_str(), title.c_str(),num->GetXaxis()->GetNbins(), num->GetXaxis()->GetXmin(),num->GetXaxis()->GetXmax());
-  for (int i=1; i <= num->GetNbinsX(); i++) {
+  TProfile * efficHist = new TProfile(name.c_str(), title.c_str(),denum->GetXaxis()->GetNbins(), denum->GetXaxis()->GetXmin(),denum->GetXaxis()->GetXmax());
 
-    const double nNum = num->GetBinContent(i);
-    const double nDenum = denum->GetBinContent(i);
+  for (int i=1; i <= denum->GetNbinsX(); i++) {
 
-    //if ( nDenum == 0 || nNum > nDenum ) continue;
-    if ( nDenum == 0 ) continue;
-    if ( nNum == 0 ) continue;
+    double nNum = num->GetBinContent(i);
+    double nDenum = denum->GetBinContent(i);
     const double effVal = nNum/nDenum;
-
+    efficHist->SetBinContent(i, effVal);
+    efficHist->SetBinEntries(i,1);
+    efficHist->SetBinError(i,0);
+    if ( nDenum == 0 || nNum ==0  ) {
+      continue;
+    }
+    if ( nNum > nDenum ) {
+      double temp = nDenum;
+      nDenum = nNum;
+      nNum = temp;
+    }
     const double errLo = TEfficiency::ClopperPearson((int)nDenum,(int)nNum,0.683,false);
     const double errUp = TEfficiency::ClopperPearson((int)nDenum,(int)nNum,0.683,true);
     const double errVal = (effVal - errLo > errUp - effVal) ? effVal - errLo : errUp - effVal;
-    efficHist->SetBinContent(i, effVal);
-    efficHist->SetBinEntries(i, 1);
     efficHist->SetBinError(i, sqrt(effVal * effVal + errVal * errVal));
   }
-
-  //TF1 *f1 = new TF1("eff_fit", "pol0", num->GetXaxis()->GetXmin(), num->GetXaxis()->GetXmax());
-  //f1->SetParameter(0,98.);
-  //efficHist->Fit("eff_fit","MES");  
   return efficHist;
 }
 

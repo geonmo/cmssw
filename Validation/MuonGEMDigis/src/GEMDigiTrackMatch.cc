@@ -17,14 +17,7 @@ GEMDigiTrackMatch::GEMDigiTrackMatch(DQMStore* dbe, edm::EDGetToken& track, edm:
 void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[3],Float_t eta) 
 {
   for( unsigned int i=0 ; i<nstation ; i++) {
-    int station = i+1;
-    //std::cout<<"eta1 : "<<getEtaRange(station,1).first<<"  eta2 : "<<getEtaRange(station,1).second<<std::endl;
-    if ( eta > getEtaRange(station,1).first&& eta < getEtaRange(station,1).second ) {
-      hist[i]->Fill(eta);
-    }
-    if ( eta > getEtaRange(station,2).first&& eta < getEtaRange(station,2).second ) {
-      hist[i]->Fill(eta);
-    }
+    hist[i]->Fill(eta);
   } 
   return;
 }

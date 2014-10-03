@@ -97,9 +97,6 @@ void GEMSimTrackMatch::analyze(const edm::Event& iEvent, const edm::EventSetup& 
     if (!isSimTrackGood(t)) 
     { continue; } 
     
-    // match hits to this SimTrack
-    SimTrackMatchManager match(t, sim_vert[t.vertIndex()], cfg_, iEvent, iSetup, theGEMGeometry);
-    const SimHitMatcher& match_sh = match.simhits();
 
     track_.pt = t.momentum().pt();
     track_.phi = t.momentum().phi();
@@ -117,6 +114,10 @@ void GEMSimTrackMatch::analyze(const edm::Event& iEvent, const edm::EventSetup& 
     for( int i=0 ; i<3 ; i++) track_.station[i] = false;
     for( int i=0 ; i<2 ; i++) track_.layer[i]   = false;
     for( int i=0 ; i<2 ; i++) track_.chamber[i] = false; 
+
+    // match hits to this SimTrack
+    SimTrackMatchManager match(t, sim_vert[t.vertIndex()], cfg_, iEvent, iSetup, theGEMGeometry);
+    const SimHitMatcher& match_sh = match.simhits();
 
     // check for hit chambers
     const auto gem_sh_ids_ch = match_sh.chamberIdsGEM();

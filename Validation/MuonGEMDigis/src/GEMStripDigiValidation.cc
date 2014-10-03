@@ -5,6 +5,7 @@ GEMStripDigiValidation::GEMStripDigiValidation(DQMStore* dbe,
 :  GEMBaseValidation(dbe, stripToken, pbInfo)
 {}
 
+
 void GEMStripDigiValidation::bookHisto(const GEMGeometry* geom) { 
   theGEMGeometry = geom;  
 
@@ -37,6 +38,7 @@ void GEMStripDigiValidation::bookHisto(const GEMGeometry* geom) {
       }
     }
   }
+
   // All chamber XY (cm) plots
   //auto& chamber = theGEMGeometry
   theSpecific_phiz[0] = dbe_->book2D("sp_strip_re-1_st1_ch1_2_roll1","sp_strip_re-1_st1_ch1_2_roll1",500, 4.5,5.5,100,-575,-560);

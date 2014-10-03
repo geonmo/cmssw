@@ -66,13 +66,13 @@ TProfile* MuonGEMDigis_Harvesting::ComputeEff(TH1F* num, TH1F* denum )
 
     double nNum = num->GetBinContent(i);
     double nDenum = denum->GetBinContent(i);
+    if ( nDenum == 0 || nNum ==0  ) {
+      continue;
+    }
     const double effVal = nNum/nDenum;
     efficHist->SetBinContent(i, effVal);
     efficHist->SetBinEntries(i,1);
     efficHist->SetBinError(i,0);
-    if ( nDenum == 0 || nNum ==0  ) {
-      continue;
-    }
     if ( nNum > nDenum ) {
       double temp = nDenum;
       nDenum = nNum;
@@ -103,6 +103,11 @@ void MuonGEMDigis_Harvesting::ProcessBooking( DQMStore* dbe_, const char* label,
     profile_sh->SetTitle( title2.Data() );
     dbe_->bookProfile( profile->GetName(),profile); 
     dbe_->bookProfile( profile_sh->GetName(),profile_sh); 
+  }
+  else {
+    std::cout<<"Can not found histogram of "<<dbe_label<<std::endl; 
+    if ( track_hist == nullptr) std::cout<<"track not found"<<std::endl;
+    if ( sh_hist    == nullptr) std::cout<<"sh_hist not found"<<std::endl;
   }
   return;
 }
@@ -140,40 +145,56 @@ MuonGEMDigis_Harvesting::endRun(edm::Run const&, edm::EventSetup const&)
  
   const char* l_suffix[4] = {"_l1","_l2","_l1or2","_l1and2"};
   const char* s_suffix[3] = {"_st1","_st2_short","_st2_long"};   
+  const char* c_suffix[2] = {"_even","_odd"};   
 
-  TH1F* gem_trk_phi[3];  
   TH1F* gem_trk_eta[3];
+  TH1F* gem_trk_phi[3][2];  
+
   TH1F* sh_eta[3][4];
-  TH1F* sh_phi[3][4];
+  TH1F* sh_phi[3][4][2];
   
   for( int i = 0 ; i < 3 ; i++) {
     TString eta_label = TString(dbe_path)+"track_eta"+s_suffix[i];
-    TString phi_label = TString(dbe_path)+"track_phi"+s_suffix[i];
-    //if ( dbe_->get(eta_label.Data()) == nullptr ) std::cout<<"missing eta"<<std::endl;  
-    //if ( dbe_->get(phi_label.Data()) == nullptr ) std::cout<<"missing phi"<<std::endl;
-  
-    if ( dbe_->get(eta_label.Data()) != nullptr && dbe_->get(phi_label.Data()) !=nullptr ) {
+    TString phi_label;
+    if ( dbe_->get(eta_label.Data()) != nullptr ) {
       gem_trk_eta[i] = (TH1F*)dbe_->get(eta_label.Data())->getTH1F()->Clone();
       gem_trk_eta[i]->Sumw2();
-
-      gem_trk_phi[i] = (TH1F*)dbe_->get(phi_label.Data())->getTH1F()->Clone();
-      gem_trk_phi[i]->Sumw2();
+    }
+    else std::cout<<"Can not found track_eta"<<std::endl;
+    for ( int k=0 ; k <2 ; k++) {
+      phi_label = TString(dbe_path)+"track_phi"+s_suffix[i]+c_suffix[k];
+      if ( dbe_->get(phi_label.Data()) !=nullptr ) {
+        gem_trk_phi[i][k] = (TH1F*)dbe_->get(phi_label.Data())->getTH1F()->Clone();
+        gem_trk_phi[i][k]->Sumw2();
+      }
+      else std::cout<<"Can not found track_phi"<<std::endl;
+    }
+    
+    if ( dbe_->get(eta_label.Data()) != nullptr && dbe_->get(phi_label.Data()) !=nullptr ) {
       for( int j = 0; j < 4 ; j++) { 
         TString suffix = TString( l_suffix[j])+TString( s_suffix[i] );
         TString eta_label = TString(dbe_path)+"dg_sh_eta"+suffix;
-        TString phi_label = TString(dbe_path)+"dg_sh_phi"+suffix;
-        if( dbe_->get(eta_label.Data() ) !=nullptr && dbe_->get(phi_label.Data()) !=nullptr ) {
-         sh_eta[i][j] = (TH1F*)dbe_->get(eta_label.Data())->getTH1F()->Clone();
-         sh_eta[i][j]->Sumw2();
-         sh_phi[i][j] = (TH1F*)dbe_->get(phi_label.Data())->getTH1F()->Clone();
-         sh_phi[i][j]->Sumw2();
+        if( dbe_->get(eta_label.Data()) !=nullptr ) {
+          sh_eta[i][j] = (TH1F*)dbe_->get(eta_label.Data())->getTH1F()->Clone();
+          sh_eta[i][j]->Sumw2();
         }
+        else std::cout<<"Can not found eta histogram : "<<eta_label<<std::endl;
         ProcessBooking( dbe_, "dg_eta", suffix, gem_trk_eta[i], sh_eta[i][j]); 
         ProcessBooking( dbe_, "pad_eta", suffix, gem_trk_eta[i], sh_eta[i][j]); 
-        ProcessBooking( dbe_, "dg_phi",suffix, gem_trk_phi[i], sh_phi[i][j]);
-        ProcessBooking( dbe_, "pad_phi",suffix,gem_trk_phi[i], sh_phi[i][j]);
+        for ( int k= 0 ; k< 2 ; k++) {
+          suffix = TString( l_suffix[j]) + TString( s_suffix[i])+ c_suffix[k];
+          TString phi_label = TString(dbe_path)+"dg_sh_phi"+suffix;
+          if( dbe_->get(phi_label.Data()) !=nullptr ) {
+           sh_phi[i][j][k] = (TH1F*)dbe_->get(phi_label.Data())->getTH1F()->Clone();
+           sh_phi[i][j][k]->Sumw2();
+          }
+          else std::cout<<"Can not found phi plots : "<<phi_label<<std::endl;
+          ProcessBooking( dbe_, "dg_phi",suffix, gem_trk_phi[i][k], sh_phi[i][j][k]);
+          ProcessBooking( dbe_, "pad_phi",suffix,gem_trk_phi[i][k], sh_phi[i][j][k]);
+        }
       }
     }
+    else std::cout<<"Can not find eta or phi of all track"<<std::endl;
   }
 }
 

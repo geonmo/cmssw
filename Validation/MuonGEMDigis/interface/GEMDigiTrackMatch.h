@@ -16,24 +16,24 @@ public:
   ~GEMDigiTrackMatch();
   void analyze(const edm::Event& e, const edm::EventSetup&);
   void bookHisto(const GEMGeometry* geom);
+	void FillWithTrigger( MonitorElement* me[3], Float_t eta);
+	void FillWithTrigger( MonitorElement* me[3][2], Float_t eta, Float_t phi, bool odd[3], bool even[3]);
 	void FillWithTrigger( MonitorElement* me[4][3], bool array[3][2], Float_t value);
+	void FillWithTrigger( MonitorElement* me[4][3][2], bool array[3][2], Float_t eta, Float_t phi, bool odd[3], bool even[3]);
  private:
 
   MonitorElement* track_eta[3];
-  MonitorElement* track_phi[3];
-
-  //MonitorElement* track_dg_eta;
-  //MonitorElement* track_sh_eta;
+  MonitorElement* track_phi[3][2];
 
   MonitorElement* dg_eta[4][3];
   MonitorElement* dg_sh_eta[4][3]; 
-
-
-  MonitorElement* dg_phi[4][3];
-  MonitorElement* dg_sh_phi[4][3]; 
-
   MonitorElement* pad_eta[4][3];
-  MonitorElement* pad_phi[4][3];
+
+  MonitorElement* dg_phi[4][3][2];
+
+  MonitorElement* dg_sh_phi[4][3][2]; 
+
+  MonitorElement* pad_phi[4][3][2];
 
 /*
   MonitorElement* dg_lx_even;

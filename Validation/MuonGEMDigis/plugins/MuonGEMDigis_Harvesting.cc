@@ -145,13 +145,13 @@ MuonGEMDigis_Harvesting::endRun(edm::Run const&, edm::EventSetup const&)
  
   const char* l_suffix[4] = {"_l1","_l2","_l1or2","_l1and2"};
   const char* s_suffix[3] = {"_st1","_st2_short","_st2_long"};   
-  const char* c_suffix[2] = {"_even","_odd"};   
+  const char* c_suffix[3] = {"_even","_odd","_all"};   
 
   TH1F* gem_trk_eta[3];
   TH1F* gem_trk_phi[3][2];  
 
   TH1F* sh_eta[3][4];
-  TH1F* sh_phi[3][4][2];
+  TH1F* sh_phi[3][4][3];
   
   for( int i = 0 ; i < 3 ; i++) {
     TString eta_label = TString(dbe_path)+"track_eta"+s_suffix[i];
@@ -161,7 +161,7 @@ MuonGEMDigis_Harvesting::endRun(edm::Run const&, edm::EventSetup const&)
       gem_trk_eta[i]->Sumw2();
     }
     else std::cout<<"Can not found track_eta"<<std::endl;
-    for ( int k=0 ; k <2 ; k++) {
+    for ( int k=0 ; k <3 ; k++) {
       phi_label = TString(dbe_path)+"track_phi"+s_suffix[i]+c_suffix[k];
       if ( dbe_->get(phi_label.Data()) !=nullptr ) {
         gem_trk_phi[i][k] = (TH1F*)dbe_->get(phi_label.Data())->getTH1F()->Clone();
@@ -181,7 +181,7 @@ MuonGEMDigis_Harvesting::endRun(edm::Run const&, edm::EventSetup const&)
         else std::cout<<"Can not found eta histogram : "<<eta_label<<std::endl;
         ProcessBooking( dbe_, "dg_eta", suffix, gem_trk_eta[i], sh_eta[i][j]); 
         ProcessBooking( dbe_, "pad_eta", suffix, gem_trk_eta[i], sh_eta[i][j]); 
-        for ( int k= 0 ; k< 2 ; k++) {
+        for ( int k= 0 ; k< 3 ; k++) {
           suffix = TString( l_suffix[j]) + TString( s_suffix[i])+ c_suffix[k];
           TString phi_label = TString(dbe_path)+"dg_sh_phi"+suffix;
           if( dbe_->get(phi_label.Data()) !=nullptr ) {

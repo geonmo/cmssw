@@ -21,15 +21,17 @@ void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[3],Float_t eta)
   } 
   return;
 }
-void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[3][2],Float_t eta, Float_t phi, bool odd[3], bool even[3]) 
+void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[3][3],Float_t eta, Float_t phi, bool odd[3], bool even[3]) 
 {
   for( unsigned int i=0 ; i<nstation ; i++) {
     int station = i+1;
     if ( odd[i] && eta > getEtaRange(station,1).first&& eta < getEtaRange(station,1).second ) {
       hist[i][1]->Fill(phi);
+      hist[i][2]->Fill(phi);
     }
     if ( even[i] && eta > getEtaRange(station,2).first&& eta < getEtaRange(station,2).second ) {
       hist[i][0]->Fill(phi);
+      hist[i][2]->Fill(phi);
     }
   } 
   return;
@@ -44,21 +46,21 @@ void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[4][3], bool array[
   } 
   return;
 }
-void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[4][3][2], bool array[3][2], Float_t eta, Float_t phi, bool odd[3], bool even[3])
+void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[4][3][3], bool array[3][2], Float_t eta, Float_t phi, bool odd[3], bool even[3])
 {
   for( unsigned int i=0 ; i<nstation ; i++) {
     int station = i+1;
     if ( odd[i] && eta > getEtaRange(station,1).first&& eta < getEtaRange(station,1).second ) {
-      if ( array[i][0] ) hist[0][i][1]->Fill(phi);
-      if ( array[i][1] ) hist[1][i][1]->Fill(phi);
-      if ( array[i][0] || array[i][1] ) hist[2][i][1]->Fill(phi);
-      if ( array[i][0] && array[i][1] ) hist[3][i][1]->Fill(phi);
+      if ( array[i][0] ) { hist[0][i][1]->Fill(phi); hist[0][i][2]->Fill(phi); } 
+      if ( array[i][1] ) { hist[1][i][1]->Fill(phi); hist[1][i][2]->Fill(phi); }
+      if ( array[i][0] || array[i][1] ) { hist[2][i][1]->Fill(phi); hist[2][i][2]->Fill(phi); }
+      if ( array[i][0] && array[i][1] ) { hist[3][i][1]->Fill(phi); hist[3][i][2]->Fill(phi); }
     }
     if ( even[i] && eta > getEtaRange(station,2).first&& eta < getEtaRange(station,2).second ) {
-      if ( array[i][0] ) hist[0][i][0]->Fill(phi);
-      if ( array[i][1] ) hist[1][i][0]->Fill(phi);
-      if ( array[i][0] || array[i][1] ) hist[2][i][0]->Fill(phi);
-      if ( array[i][0] && array[i][1] ) hist[3][i][0]->Fill(phi);
+      if ( array[i][0] ) { hist[0][i][0]->Fill(phi); hist[0][i][2]->Fill(phi); }
+      if ( array[i][1] ) { hist[1][i][0]->Fill(phi); hist[1][i][2]->Fill(phi); }
+      if ( array[i][0] || array[i][1] ) { hist[2][i][0]->Fill(phi); hist[2][i][2]->Fill(phi); }
+      if ( array[i][0] && array[i][1] ) { hist[3][i][0]->Fill(phi); hist[3][i][2]->Fill(phi); }
     }
   } 
   return;
@@ -70,7 +72,7 @@ void GEMDigiTrackMatch::bookHisto(const GEMGeometry* geom){
   const float PI=TMath::Pi();
   const char* l_suffix[4] = {"_l1","_l2","_l1or2","_l1and2"};
   const char* s_suffix[3] = {"_st1","_st2_short","_st2_long"};
-  const char* c_suffix[2] = {"_even","_odd"};
+  const char* c_suffix[3] = {"_even","_odd","_all"};
 
   nstation = theGEMGeometry->regions()[0]->stations().size(); 
   for( unsigned int j=0 ; j<nstation ; j++) {
@@ -78,11 +80,11 @@ void GEMDigiTrackMatch::bookHisto(const GEMGeometry* geom){
       string track_eta_title = string("track_eta")+";SimTrack |#eta|;# of tracks";
       track_eta[j] = dbe_->book1D(track_eta_name.c_str(), track_eta_title.c_str(),140,minEta_,maxEta_);
 
-      for ( unsigned int k = 0 ; k<2 ; k++) {
+      for ( unsigned int k = 0 ; k<3 ; k++) {
           string suffix = string(s_suffix[j])+ string(c_suffix[k]);
           string track_phi_name  = string("track_phi")+suffix;
           string track_phi_title = string("track_phi")+suffix+";SimTrack #phi;# of tracks";
-          track_phi[j][k] = dbe_->book1D(track_phi_name.c_str(), track_phi_title.c_str(),100,-PI,PI);
+          track_phi[j][k] = dbe_->book1D(track_phi_name.c_str(), track_phi_title.c_str(),200,-PI,PI);
       }
 
 
@@ -100,19 +102,19 @@ void GEMDigiTrackMatch::bookHisto(const GEMGeometry* geom){
          string pad_eta_title = pad_eta_name+"; tracks |#eta|; # of tracks";
          pad_eta[i][j] = dbe_->book1D( pad_eta_name.c_str(), pad_eta_title.c_str(), 140, minEta_, maxEta_) ;
 
-         for ( unsigned int k = 0 ; k<2 ; k++) {
+         for ( unsigned int k = 0 ; k<3 ; k++) {
           suffix = string(l_suffix[i])+string(s_suffix[j])+ string(c_suffix[k]);
           string dg_phi_name = string("dg_phi")+suffix;
           string dg_phi_title = dg_phi_name+"; tracks #phi; # of tracks";
-          dg_phi[i][j][k] = dbe_->book1D( (dg_phi_name).c_str(), dg_phi_title.c_str(), 100, -PI,PI) ;
+          dg_phi[i][j][k] = dbe_->book1D( (dg_phi_name).c_str(), dg_phi_title.c_str(), 200, -PI,PI) ;
 
           string dg_sh_phi_name = string("dg_sh_phi")+suffix;
           string dg_sh_phi_title = dg_sh_phi_name+"; tracks #phi; # of tracks";
-          dg_sh_phi[i][j][k] = dbe_->book1D( (dg_sh_phi_name).c_str(), dg_sh_phi_title.c_str(), 100,-PI,PI) ;
+          dg_sh_phi[i][j][k] = dbe_->book1D( (dg_sh_phi_name).c_str(), dg_sh_phi_title.c_str(), 200,-PI,PI) ;
 
           string pad_phi_name = string("pad_phi")+suffix;
           string pad_phi_title = pad_phi_name+"; tracks #phi; # of tracks";
-          pad_phi[i][j][k] = dbe_->book1D( (pad_phi_name).c_str(), pad_phi_title.c_str(), 100, -PI,PI) ;
+          pad_phi[i][j][k] = dbe_->book1D( (pad_phi_name).c_str(), pad_phi_title.c_str(), 200, -PI,PI) ;
            /*
            string dg_lx_name = string("dg_lx")+suffix;
            string dg_lx_title = dg_lx_name+"; local X[cm]; Entries";

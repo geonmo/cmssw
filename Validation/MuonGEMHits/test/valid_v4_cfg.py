@@ -84,7 +84,4 @@ from SimGeneral.MixingModule.fullMixCustomize_cff import setCrossingFrameOn
 #call to customisation function setCrossingFrameOn imported from SimGeneral.MixingModule.fullMixCustomize_cff
 process = setCrossingFrameOn(process)
 
-process.gemDigiValidation.simTrackMatching.EtaRangeForPhi = cms.untracked.vdouble( 1.6,2.16, 1.6,2.1, 1.6,2.5)
-process.gemHitsValidation.simTrackMatching.EtaRangeForPhi = cms.untracked.vdouble( 1.6,2.16, 1.6,2.1, 1.6,2.5)
-
 # End of customisation functions

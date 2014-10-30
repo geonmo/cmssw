@@ -69,15 +69,15 @@ TProfile* MuonGEMDigis_Harvesting::ComputeEff(TH1F* num, TH1F* denum )
     if ( nDenum == 0 || nNum ==0  ) {
       continue;
     }
-    const double effVal = nNum/nDenum;
-    efficHist->SetBinContent(i, effVal);
-    efficHist->SetBinEntries(i,1);
-    efficHist->SetBinError(i,0);
     if ( nNum > nDenum ) {
       double temp = nDenum;
       nDenum = nNum;
       nNum = temp;
     }
+    const double effVal = nNum/nDenum;
+    efficHist->SetBinContent(i, effVal);
+    efficHist->SetBinEntries(i,1);
+    efficHist->SetBinError(i,0);
     const double errLo = TEfficiency::ClopperPearson((int)nDenum,(int)nNum,0.683,false);
     const double errUp = TEfficiency::ClopperPearson((int)nDenum,(int)nNum,0.683,true);
     const double errVal = (effVal - errLo > errUp - effVal) ? effVal - errLo : errUp - effVal;

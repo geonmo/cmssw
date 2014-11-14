@@ -19,6 +19,48 @@ GEMTrackMatch::GEMTrackMatch(DQMStore* dbe, edm::EDGetToken& simTracks, edm::EDG
 
 GEMTrackMatch::~GEMTrackMatch() {
 }
+std::pair<double,double> GEMTrackMatch::getEtaRange( int station, int chamber ) 
+{
+  if( theGEMGeometry != nullptr) {
+    auto& ch = theGEMGeometry->regions()[0]->stations()[station-1]->rings()[0]->superChambers()[chamber-1]->chambers()[0];
+    auto& roll1 = ch->etaPartitions()[0]; //.begin();
+    auto& roll2 = ch->etaPartitions()[ch->nEtaPartitions()-1];
+    const BoundPlane& bSurface1(roll1->surface());    
+    const BoundPlane& bSurface2(roll2->surface());    
+    
+    auto& parameters1( roll1->specs()->parameters());
+    //float bottomEdge1(parameters1[0]);
+    //float topEdge1(parameters1[1]);
+    float height1(parameters1[2]);
+
+    auto& parameters2( roll2->specs()->parameters());
+    //float bottomEdge2(parameters2[0]);
+    //float topEdge2(parameters2[1]);
+    float height2(parameters2[2]);
+
+    LocalPoint lTop1( 0., height1, 0.);
+    GlobalPoint gTop1(bSurface1.toGlobal(lTop1));
+    LocalPoint lBottom1( 0., -height1, 0.);
+    GlobalPoint gBottom1(bSurface1.toGlobal(lBottom1));
+
+    LocalPoint lTop2( 0., height2, 0.);
+    GlobalPoint gTop2(bSurface2.toGlobal(lTop2));
+    LocalPoint lBottom2( 0., -height2, 0.);
+    GlobalPoint gBottom2(bSurface2.toGlobal(lBottom2));
+    
+    //std::cout<<"roll1 top : "<<gTop1.eta()<<"  bottom :"<<gBottom1.eta()<<std::endl;
+    //std::cout<<"roll2 top : "<<gTop2.eta()<<"  bottom :"<<gBottom2.eta()<<std::endl;
+
+    double eta1 = fabs(gTop1.eta())    - 0.01;
+    double eta2 = fabs(gBottom2.eta()) + 0.01;
+
+    return std::make_pair(eta1,eta2);
+  }
+  else { std::cout<<"Failed to get geometry information"<<std::endl;
+    return std::make_pair(0,0);
+  }
+
+}
 
 bool GEMTrackMatch::isSimTrackGood(const SimTrack &t)
 {

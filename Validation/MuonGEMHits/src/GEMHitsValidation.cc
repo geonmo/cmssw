@@ -31,7 +31,7 @@ void GEMHitsValidation::bookHisto(const GEMGeometry* gem_geo) {
     std::stringstream hist_name;
     hist_name<<"gem_sh_xy_r"<<region->region()<<"_st"<<stationLabel[station->station()-1]<<"_";
     std::stringstream hist_title;
-    hist_title<<"Simhit Global XY Plots at "<<id<<" on ";
+    hist_title<<"Simhit Global XY Plots at Region"<<region->region()<<" Station "<<stationLabel[station->station()-1]<<" on ";
     MonitorElement* temp = dbe_->book2D( (hist_name.str()+"even").c_str(), (hist_title.str()+"even").c_str(),nBinXY_,-360,360,nBinXY_,-360,360);
     if ( temp != nullptr ) {
       LogDebug("MuonGEMHitsValidation")<<"ME can be acquired!";

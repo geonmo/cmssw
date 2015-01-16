@@ -38,8 +38,6 @@ protected:
   std::vector<double> nBinZR_;
   std::vector<double> RangeZR_;
   int nBinXY_;
-  double GE11PhiBegin_; 
-  double GE11PhiStep_; 
 
 };
 

@@ -58,6 +58,11 @@ public:
   virtual void bookHisto(const GEMGeometry* geom) = 0 ;
   std::pair<double,double> getEtaRange(int station, int chamber  ) ; 
 
+  void FillWithTrigger( MonitorElement* me[3], Float_t eta);
+  void FillWithTrigger( MonitorElement* me[3][3], Float_t eta, Float_t phi, bool odd[3], bool even[3]);
+  void FillWithTrigger( MonitorElement* me[4][3], bool array[3][2], Float_t value);
+  void FillWithTrigger( MonitorElement* me[4][3][3], bool array[3][2], Float_t eta, Float_t phi, bool odd[3], bool even[3]);
+
  protected:
 
   edm::ParameterSet cfg_;

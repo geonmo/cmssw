@@ -57,6 +57,7 @@ MuonGEMDigis::MuonGEMDigis(const edm::ParameterSet& ps)
   edm::EDGetToken simVerticesToken = consumes< edm::SimVertexContainer >(simTrackMatching_.getParameter<edm::InputTag>("simVertexCollection"));
 
   const edm::ParameterSet& pbInfo = ps.getParameterSet("PlotBinInfo");
+  const edm::ParameterSet& gcCheck = ps.getParameterSet("GeometryChecker");
   
   dbe_ = edm::Service<DQMStore>().operator->();
   outputFile_ =  ps.getParameter<std::string>("outputFile");
@@ -65,6 +66,7 @@ MuonGEMDigis::MuonGEMDigis(const edm::ParameterSet& ps)
   theGEMCSCPadDigiValidation = new GEMCSCPadDigiValidation(dbe_, cscPadToken_, pbInfo );
   theGEMCSCCoPadDigiValidation = new GEMCSCCoPadDigiValidation(dbe_, cscCopadToken_, pbInfo );
   theGEMDigiTrackMatch = new GEMDigiTrackMatch(dbe_, simTracksToken, simVerticesToken, simTrackMatching_ );
+  theGEMCheckGeometry = new GEMCheckGeometry( dbe_, gcCheck);
 }
 
 
@@ -136,6 +138,7 @@ MuonGEMDigis::beginRun(edm::Run const&, edm::EventSetup const& iSetup)
     theGEMCSCPadDigiValidation->bookHisto(gem_geometry_);
     theGEMCSCCoPadDigiValidation->bookHisto(gem_geometry_);
     theGEMDigiTrackMatch->bookHisto(gem_geometry_);
+    theGEMCheckGeometry->bookHisto(gem_geometry_);
   }
 }
 
@@ -143,7 +146,7 @@ MuonGEMDigis::beginRun(edm::Run const&, edm::EventSetup const& iSetup)
 void 
 MuonGEMDigis::endRun(edm::Run const&, edm::EventSetup const&)
 {
-  theGEMStripDigiValidation->savePhiPlot();
+  theGEMCheckGeometry->savePlot();
   
   if ( outputFile_.size() != 0 && dbe_ ) dbe_->save(outputFile_);
 }

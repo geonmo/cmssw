@@ -17,6 +17,7 @@
 #include "Validation/MuonGEMDigis/interface/GEMCSCPadDigiValidation.h"
 #include "Validation/MuonGEMDigis/interface/GEMCSCCoPadDigiValidation.h"
 #include "Validation/MuonGEMDigis/interface/GEMDigiTrackMatch.h"
+#include "Validation/MuonGEMDigis/interface/GEMCheckGeometry.h"
 
 
 
@@ -48,6 +49,7 @@ private:
   GEMCSCPadDigiValidation* theGEMCSCPadDigiValidation;
   GEMCSCCoPadDigiValidation* theGEMCSCCoPadDigiValidation;
   GEMDigiTrackMatch* theGEMDigiTrackMatch;
+  GEMCheckGeometry* theGEMCheckGeometry;
     
   edm::EDGetToken stripToken_;
   edm::EDGetToken cscPadToken_;

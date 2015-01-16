@@ -14,59 +14,6 @@ GEMDigiTrackMatch::GEMDigiTrackMatch(DQMStore* dbe, edm::EDGetToken& track, edm:
    maxEta_ = cfg_.getUntrackedParameter<double>("gemDigiMaxEta",2.18);
 }
 
-void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[3],Float_t eta) 
-{
-  for( unsigned int i=0 ; i<nstation ; i++) {
-    hist[i]->Fill(eta);
-  } 
-  return;
-}
-void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[3][3],Float_t eta, Float_t phi, bool odd[3], bool even[3]) 
-{
-  for( unsigned int i=0 ; i<nstation ; i++) {
-    int station = i+1;
-    if ( odd[i] && eta > getEtaRange(station,1).first&& eta < getEtaRange(station,1).second ) {
-      hist[i][1]->Fill(phi);
-      hist[i][2]->Fill(phi);
-    }
-    if ( even[i] && eta > getEtaRange(station,2).first&& eta < getEtaRange(station,2).second ) {
-      hist[i][0]->Fill(phi);
-      hist[i][2]->Fill(phi);
-    }
-  } 
-  return;
-}
-void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[4][3], bool array[3][2], Float_t value)
-{
-  for( unsigned int i=0 ; i<nstation ; i++) {
-    if ( array[i][0] ) hist[0][i]->Fill(value);
-    if ( array[i][1] ) hist[1][i]->Fill(value);
-    if ( array[i][0] || array[i][1] ) hist[2][i]->Fill(value);
-    if ( array[i][0] && array[i][1] ) hist[3][i]->Fill(value);
-  } 
-  return;
-}
-void GEMDigiTrackMatch::FillWithTrigger( MonitorElement* hist[4][3][3], bool array[3][2], Float_t eta, Float_t phi, bool odd[3], bool even[3])
-{
-  for( unsigned int i=0 ; i<nstation ; i++) {
-    int station = i+1;
-    if ( odd[i] && eta > getEtaRange(station,1).first&& eta < getEtaRange(station,1).second ) {
-      if ( array[i][0] ) { hist[0][i][1]->Fill(phi); hist[0][i][2]->Fill(phi); } 
-      if ( array[i][1] ) { hist[1][i][1]->Fill(phi); hist[1][i][2]->Fill(phi); }
-      if ( array[i][0] || array[i][1] ) { hist[2][i][1]->Fill(phi); hist[2][i][2]->Fill(phi); }
-      if ( array[i][0] && array[i][1] ) { hist[3][i][1]->Fill(phi); hist[3][i][2]->Fill(phi); }
-    }
-    if ( even[i] && eta > getEtaRange(station,2).first&& eta < getEtaRange(station,2).second ) {
-      if ( array[i][0] ) { hist[0][i][0]->Fill(phi); hist[0][i][2]->Fill(phi); }
-      if ( array[i][1] ) { hist[1][i][0]->Fill(phi); hist[1][i][2]->Fill(phi); }
-      if ( array[i][0] || array[i][1] ) { hist[2][i][0]->Fill(phi); hist[2][i][2]->Fill(phi); }
-      if ( array[i][0] && array[i][1] ) { hist[3][i][0]->Fill(phi); hist[3][i][2]->Fill(phi); }
-    }
-  } 
-  return;
-}
-
-
 void GEMDigiTrackMatch::bookHisto(const GEMGeometry* geom){
   theGEMGeometry = geom;
   const float PI=TMath::Pi();

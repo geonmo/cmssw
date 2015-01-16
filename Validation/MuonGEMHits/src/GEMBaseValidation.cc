@@ -14,8 +14,6 @@ GEMBaseValidation::GEMBaseValidation(DQMStore* dbe,
   nBinZR_ = plotRange_.getUntrackedParameter< std::vector<double> >("nBinGlobalZR") ;
   RangeZR_ = plotRange_.getUntrackedParameter< std::vector<double> >("RangeGlobalZR");
   nBinXY_ = plotRange_.getUntrackedParameter< int >("nBinGlobalXY",360) ;
-  GE11PhiBegin_ = plotRange_.getUntrackedParameter< double >("GE11PhiBegin",-5.) ;
-  GE11PhiStep_ = plotRange_.getUntrackedParameter< double >("GE11PhiStep",-5.) ;
 
   regionLabel.push_back("-1");
   regionLabel.push_back("1" );

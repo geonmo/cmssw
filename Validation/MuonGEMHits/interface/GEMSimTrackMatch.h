@@ -14,9 +14,9 @@ public:
 
  private:
 
-  MonitorElement* track_eta[4];//[4][3][2];
+  MonitorElement* track_eta[3];//[4][3][2];
 
-  MonitorElement* track_phi[4];//[5][2];
+  MonitorElement* track_phi[3][3];//[5][2];
 
   MonitorElement* gem_lx[3][2];
 
@@ -24,7 +24,7 @@ public:
 
   MonitorElement* sh_eta[4][3];
 
-  MonitorElement* sh_phi[4][3];
+  MonitorElement* sh_phi[4][3][3];
 
 	unsigned int nstation;
 };

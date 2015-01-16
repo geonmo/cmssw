@@ -13,7 +13,10 @@ ROOT.gROOT.SetBatch(1)
 
 import optparse
 
-def draw_col_userRange( target_dir, h, ext =".png", opt = "colz"):
+range_min =0
+range_max =0 
+
+def draw_col_userRange( target_dir, h, min, max,ext =".png", opt = "colz"):
   gStyle.SetOptStat(0)
   c = TCanvas(h.GetTitle(),h.GetName(),1600,1600)
   c_title = c.GetTitle()
@@ -27,12 +30,12 @@ def draw_col_userRange( target_dir, h, ext =".png", opt = "colz"):
   axis_title = h.GetXaxis().GetTitle()
   axis_title = axis_title+ "/"+str(h.GetXaxis().GetBinWidth(1))
   h.GetXaxis().SetTitle( axis_title)
-  h.SetAxisRange(14.5,15.5)
+  h.SetAxisRange(float(min),float(max),"X")
   h.Draw(opt)
   c.SaveAs(target_dir + c_title + ext)
   
 
-def draw_plot( file, tDir,oDir ) :
+def draw_plot( file, tDir,oDir,min,max ) :
   c = TCanvas("c","c",600,600)
   dqm_file = TFile( file)
   d1 = dqm_file.Get(tDir)
@@ -53,14 +56,19 @@ def draw_plot( file, tDir,oDir ) :
     key_list.append(x.GetName())
   for hist in key_list :
     if ( hist.find("geo_phi") != -1) :
-      draw_col_userRange( oDir, d1.Get(hist))
+      draw_col_userRange( oDir, d1.Get(hist),min,max)
 
 if __name__ == '__main__' :
   usage = ": %prog [option] DQM_filename.root\negs) ./%prog DQM_V0001_R000000001__Global__CMSSW_X_Y_Z__RECO.root"
   parser = optparse.OptionParser(usage=usage)
   parser.add_option("-o",dest='directory',help='Name of output directory(Default : ./)',default="./")
+  parser.add_option("--min",dest='range_min',help='Minimum of phi degree',default=14.5)
+  parser.add_option("--max",dest='range_max',help='Maximum of phi degree',default=15.5)
   options, args = parser.parse_args()
 
+  print options.range_min, options.range_max
+  min = options.range_min
+  max = options.range_max
   if len(sys.argv) ==1 :
     parser.print_help()
     exit()
@@ -81,4 +89,4 @@ if __name__ == '__main__' :
     tDir = "DQMData/Run 1/Muon%sV/Run summary/%sTask"%(step,step)
     oDir = options.directory
     os.system("mkdir -p "+oDir )
-    draw_plot(args[0],tDir,oDir)  
+    draw_plot(args[0],tDir,oDir,min,max)  

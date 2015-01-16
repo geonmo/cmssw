@@ -59,7 +59,7 @@ def draw_plot( file, tDir,oDir,min,max ) :
       draw_col_userRange( oDir, d1.Get(hist),min,max)
 
 if __name__ == '__main__' :
-  usage = ": %prog [option] DQM_filename.root\negs) ./%prog DQM_V0001_R000000001__Global__CMSSW_X_Y_Z__RECO.root"
+  usage = ": %prog [option] DQM_filename.root\negs) ./%prog --min 14.5 --max 15.5 DQM_V0001_R000000001__Global__CMSSW_X_Y_Z__RECO.root"
   parser = optparse.OptionParser(usage=usage)
   parser.add_option("-o",dest='directory',help='Name of output directory(Default : ./)',default="./")
   parser.add_option("--min",dest='range_min',help='Minimum of phi degree',default=14.5)

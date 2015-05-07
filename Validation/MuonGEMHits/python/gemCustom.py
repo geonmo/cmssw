@@ -19,11 +19,7 @@ def customise_digitization(process):
 def customise_Validation(process):
   #process.load('Validation.MuonGEMHits.MuonGEMHits_cfi')
   process.load('Validation.MuonGEMHits.gemSimValid_cff')
-  process.load('Validation.MuonGEMDigis.MuonGEMDigis_cfi')
-  process.load('Validation.MuonGEMRecHits.MuonGEMRecHits_cfi')
   process.genvalid_all += process.gemSimValid
-  process.genvalid_all += process.gemDigiValidation
-  process.genvalid_all += process.gemRecHitsValidation
   return process
 
 def customise_harvesting(process):

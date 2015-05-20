@@ -92,6 +92,7 @@ void GEMRecHitsValidation::analyze(const edm::Event& e,
     return;
   }
   
+
   edm::Handle<GEMRecHitCollection> gemRecHits;
   edm::Handle<edm::PSimHitContainer> gemSimHits;
   e.getByToken( this->InputTagToken_, gemSimHits);

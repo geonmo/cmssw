@@ -1,0 +1,8 @@
+[submodule "JMEAnalysis/Jet"]
+	path = JMEAnalysis/Jet
+	url = git@github.com:cms-jet/JetToolbox.git
+	branch = jetToolbox_74X
+[submodule "CATTools"]
+	path = CATTools
+	url = git@github.com:vallot/CATTools.git
+	branch = cat75x

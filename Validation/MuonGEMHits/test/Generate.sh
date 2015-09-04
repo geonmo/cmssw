@@ -5,8 +5,14 @@
 
 #!/bin/bash
 
-cmsDriver.py SingleMuPt40Fwd_cfi -s GEN,SIM,DIGI,L1 --conditions auto:run2_design --magField 38T_PostLS1 --datatier GEN-SIM-DIGI --geometry Extended2023 --evt_type Validation/MuonGEMHits/SingleMuPt40Fwd_cfi --eventcontent FEVTDEBUG -n 100 --no_exec --fileout out_digi.root --customise SLHCUpgradeSimulations/Configuration/gemCustom.customise2023,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixRPCConditions,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixCSCAlignmentConditions,SimMuon/GEMDigitizer/customizeGEMDigi.customize_digi_addGEM_muon_only --python_filename=gen_sim_digi_cfg.py  
 
-cmsDriver.py validation --conditions auto:run2_design -n 1000 --eventcontent FEVTDEBUGHLT -s VALIDATION:genvalid_all --customise SLHCUpgradeSimulations/Configuration/gemCustom.customise2023,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixCSCAlignmentConditions --datatier GEN-SIM-DIGI --geometry Extended2023 --no_exec --filein file:out_digi.root --fileout file:out_valid.root --python_filename=valid_cfg.py
 
-cmsDriver.py harvest --conditions auto:run2_design -n 1000 --eventcontent FEVTDEBUGHLT -s HARVESTING:genHarvesting --customise SLHCUpgradeSimulations/Configuration/gemCustom.customise2023,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixCSCAlignmentConditions --datatier GEN-SIM-DIGI --geometry Extended2023 --no_exec --filein file:out_valid.root --python_filename=harvest_cfg.py
+#cmsDriver.py SingleMuPt100_cfi -s GEN,SIM,DIGI,L1 --conditions auto:run2_design --magField 38T_PostLS1 --datatier GEN-SIM-DIGI --geometry Extended2015MuonGEMDev,Extended2015MuonGEMDevReco --eventcontent FEVTDEBUGHLT  --customise=SimMuon/GEMDigitizer/customizeGEMDigi.customize_digi_addGEM_muon_only,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixRPCConditions,SLHCUpgradeSimulations/Configuration/gemCustom.customise2023 -n 100 --no_exec --fileout out_digi.root --python_filename SingleMuPt100_cfi_GEM-SIM-DIGI_Extended2015_cfg.py --era Run2_25ns
+
+cmsDriver.py SingleMuPt100_cfi -s GEN,SIM,DIGI,L1 --conditions auto:run2_design --magField 38T_PostLS1 --datatier GEN-SIM-DIGI --geometry Extended2015MuonGEMDev,Extended2015MuonGEMDevReco --eventcontent FEVTDEBUGHLT  --customise=SimMuon/GEMDigitizer/customizeGEMDigi.customize_digi_addGEM_muon_only,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixRPCConditions,SLHCUpgradeSimulations/Configuration/gemCustom.customise2023 -n 100 --no_exec --fileout out_digi.root --python_filename SingleMuPt100_cfi_GEM-SIM-DIGI_Extended2015_cfg.py --era Run2_25ns
+
+
+cmsDriver.py validation --conditions auto:run2_design -n 1000 --eventcontent FEVTDEBUGHLT -s VALIDATION:genvalid_all --customise SLHCUpgradeSimulations/Configuration/gemCustom.customise2023,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixCSCAlignmentConditions --datatier GEN-SIM-DIGI --geometry Extended2015MuonGEMDev,Extended2015MuonGEMDevReco --no_exec --filein file:out_digi.root --fileout file:out_valid.root --python_filename=valid_cfg.py --era Run2_25ns
+
+
+cmsDriver.py harvest --conditions auto:run2_design -n -1 --eventcontent FEVTDEBUGHLT -s HARVESTING:genHarvesting --customise SLHCUpgradeSimulations/Configuration/gemCustom.customise2023,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixCSCAlignmentConditions --datatier GEN-SIM-DIGI --geometry Extended2015MuonGEMDev,Extended2015MuonGEMDevReco --no_exec --filein file:out_valid.root --python_filename=harvest_cfg.py --era Run2_25ns

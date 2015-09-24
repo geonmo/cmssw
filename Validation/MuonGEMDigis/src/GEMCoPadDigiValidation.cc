@@ -9,7 +9,7 @@ GEMCoPadDigiValidation::GEMCoPadDigiValidation(const edm::ParameterSet& cfg): GE
 }
 void GEMCoPadDigiValidation::bookHistograms(DQMStore::IBooker & ibooker, edm::Run const & Run, edm::EventSetup const & iSetup ) {
   const GEMGeometry* GEMGeometry_ = initGeometry(iSetup);
-  if ( nStation() ==3 ) setNStationForLabel(2) ;
+  if ( nStationForLabel() ==3 ) setNStationForLabel(2) ;
 
   const double PI = TMath::Pi();
 

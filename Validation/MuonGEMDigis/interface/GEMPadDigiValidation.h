@@ -25,6 +25,10 @@ public:
   // Simple plots
   std::map< UInt_t , MonitorElement* > thePad_dcEta;
   std::map< UInt_t , MonitorElement* > thePad_simple_zr;
+
+  edm::EDGetToken InputTagToken_;
+  int nBinXY_;
+  bool detailPlot_;
 };
 
 #endif

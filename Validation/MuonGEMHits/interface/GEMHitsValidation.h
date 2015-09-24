@@ -30,9 +30,10 @@ public:
   std::map< UInt_t,  MonitorElement* > gem_sh_simple_tofMu;
   std::map< UInt_t,  MonitorElement* > gem_sh_simple_elossMu;
 
-  Int_t npart;
-  
 
+  edm::EDGetToken InputTagToken_;
+  int nBinXY_;
+  bool detailPlot_;
 };
 
 #endif

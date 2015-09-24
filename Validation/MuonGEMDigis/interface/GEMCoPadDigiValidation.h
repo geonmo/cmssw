@@ -28,6 +28,9 @@ public:
   std::map< UInt_t , MonitorElement* > theCoPad_dcEta;
   std::map< UInt_t , MonitorElement* > theCoPad_simple_zr;
   int minBXGEM_, maxBXGEM_;
+  edm::EDGetToken InputTagToken_;
+  int nBinXY_;
+  bool detailPlot_;
 };
 
 #endif

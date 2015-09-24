@@ -31,6 +31,9 @@ public:
   std::map< UInt_t , MonitorElement* > theStrip_dcEta;
   std::map< UInt_t , MonitorElement* > theStrip_simple_zr;
   
+  edm::EDGetToken InputTagToken_;
+  int nBinXY_;
+  bool detailPlot_;
 };
 
 #endif

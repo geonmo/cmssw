@@ -34,7 +34,9 @@ private:
   MonitorElement* gem_region_pullX[2];
   MonitorElement* gem_region_pullY[2];
 
-  edm::EDGetToken InputTagToken_RH;  
+  edm::EDGetToken InputTagToken_, InputTagToken_RH;
+  int nBinXY_;
+  bool detailPlot_;
 
 };
 

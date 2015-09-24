@@ -73,7 +73,7 @@ void GEMPadDigiValidation::bookHistograms(DQMStore::IBooker & ibooker, edm::Run 
         for( int station_num = 0 ; station_num < nstations ; station_num++) {
           if ( station_num == 0 ) nPads = npadsGE11;
           else nPads = npadsGE21;
-          if ( station_num ==1 ) continue;
+          if ( station_num ==2 ) continue;
           name_prefix  = std::string("_r")+regionLabel[region_num]+"_st"+stationLabel[station_num]+"_l"+layerLabel[layer_num];
           label_prefix = "region"+regionLabel[region_num]+" station "+stationLabel[station_num]+" layer "+layerLabel[layer_num];
           theCSCPad_phipad[region_num][station_num][layer_num] = ibooker.book2D( ("pad_dg_phipad"+name_prefix).c_str(), ("Digi occupancy: "+label_prefix+"; phi [rad]; Pad number").c_str(), 280,-TMath::Pi(),TMath::Pi(), nPads/2,0,nPads );
@@ -159,13 +159,13 @@ void GEMPadDigiValidation::analyze(const edm::Event& e,
       edm::LogInfo("GEMPadDIGIValidation")<<"Global bx "<<bx<<std::endl; 
 
       int region_num=0;
+      if ( station== 3 ) station=2;
       int station_num = station-1;
       int layer_num = layer-1;
       if ( region == -1 ) region_num = 0 ; 
       else if (region == 1 ) region_num = 1; 
       int binX = (chamber-1)*2+layer_num;
       int binY = nroll;
-      if ( station== 3 ) station=2;
 
       // Fill normal plots.
       TString histname_suffix = TString::Format("_r%d",region);

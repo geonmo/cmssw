@@ -120,7 +120,7 @@ void GEMHitsValidation::bookHistograms(DQMStore::IBooker & ibooker, edm::Run con
     for( unsigned int region_num = 0 ; region_num < nregion ; region_num++ ) {
       for( unsigned int station_num = 0 ; station_num < nstation ; station_num++) {
         for( unsigned int layer_num = 0 ; layer_num < 2 ; layer_num++) {
-          if ( station_num ==1 ) continue;
+          if ( station_num ==2 ) continue;
           gem_sh_zr[region_num][station_num][layer_num] = BookHistZR(ibooker,"gem_sh","SimHit",region_num,station_num,layer_num);
           gem_sh_xy[region_num][station_num][layer_num] = BookHistXY(ibooker,"gem_sh","SimHit",region_num,station_num,layer_num);
           std::string hist_name_for_tof  = std::string("gem_sh_tof_r")+regionLabel[region_num]+"_st"+stationLabel[station_num]+"_l"+layerLabel[layer_num];
@@ -164,9 +164,6 @@ void GEMHitsValidation::analyze(const edm::Event& e,
     return ;
   }
 
-  Float_t timeOfFlightMuon = 0.;
-  Float_t energyLossMuon = 0;
-
   for (auto hits=GEMHits->begin(); hits!=GEMHits->end(); hits++) {
 
     const GEMDetId id(hits->detUnitId());
@@ -196,13 +193,9 @@ void GEMHitsValidation::analyze(const edm::Event& e,
     Float_t energyLoss = hits->energyLoss();
     Float_t timeOfFlight = hits->timeOfFlight();
 
-//    int region_num = 0;
-//    if( region == -1 ) region_num = 0;
-//    else if ( region == 1 ) region_num = 1;
     int layer_num = layer-1;
     int binX = (chamber-1)*2+layer_num;
     int binY = nroll;
-//    int station_num = station-1;
     if ( station == 2 ) continue;
     if ( station == 3 ) station = 2;
 
@@ -225,16 +218,6 @@ void GEMHitsValidation::analyze(const edm::Event& e,
     }
 
     if( detailPlot_ ){
-      //move these here in order to use a GEMDetId - layers, station...
-      if (abs(hits-> particleType()) == 13){
-        timeOfFlightMuon = hits->timeOfFlight();
-        energyLossMuon = hits->energyLoss();
-        //fill histos for Muons only
-        gem_sh_tofMu[(int)(region/2.+0.5)][station-1][layer-1]->Fill(timeOfFlightMuon);
-        gem_sh_elossMu[(int)(region/2.+0.5)][station-1][layer-1]->Fill(energyLossMuon*1.e9);
-      }
-    
-      // fill hist
       // First, fill variable has no condition.
       gem_sh_zr[(int)(region/2.+0.5)][station-1][layer-1]->Fill(g_z,g_r);
       gem_sh_xy[(int)(region/2.+0.5)][station-1][layer-1]->Fill(g_x,g_y);
@@ -246,6 +229,7 @@ void GEMHitsValidation::analyze(const edm::Event& e,
       else  chamber = "even";
       std::stringstream hist_name;
       hist_name<<"gem_sh_xy_r"<<id.region()<<"_st"<<stationLabel[id.station()-1]<<"_"<<chamber;
+
       gem_sh_xy_st_ch[hist_name.str()]->Fill( g_x, g_y); 
     }
   }

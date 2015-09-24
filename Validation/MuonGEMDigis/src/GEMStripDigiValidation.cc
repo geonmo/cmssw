@@ -81,7 +81,7 @@ void GEMStripDigiValidation::bookHistograms(DQMStore::IBooker & ibooker, edm::Ru
         for( int station_num = 0 ; station_num < nstations ; station_num++) {
           if ( station_num == 0 ) nstrips = nstripsGE11;
           else nstrips = nstripsGE21;
-          if (station_num == 1 ) continue;
+          if (station_num == 2 ) continue;
           std::string name_prefix = std::string("_r")+regionLabel[region_num]+"_st"+stationLabel[station_num] + "_l"+layerLabel[layer_num];
           std::string label_prefix = "region"+regionLabel[region_num]+" station "+stationLabel[station_num] +" layer "+layerLabel[layer_num];
           theStrip_phistrip[region_num][station_num][layer_num] = ibooker.book2D( ("strip_dg_phistrip"+name_prefix).c_str(), ("Digi occupancy: "+label_prefix+"; phi [rad];strip number").c_str(), 280, -TMath::Pi(), TMath::Pi(), nstrips/2,0,nstrips);

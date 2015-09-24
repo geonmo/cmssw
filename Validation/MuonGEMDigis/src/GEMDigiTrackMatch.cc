@@ -117,7 +117,6 @@ void GEMDigiTrackMatch::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
     //const edm::SimVertexContainer & sim_vert = *sim_vertices.product();
     const edm::SimTrackContainer & sim_trks = *sim_tracks.product();
-    std::cout<<"1"<<std::endl;
     MySimTrack track_; 
     for (auto& t: sim_trks)
     {
@@ -134,7 +133,6 @@ void GEMDigiTrackMatch::analyze(const edm::Event& iEvent, const edm::EventSetup&
       track_.eta = t.momentum().eta();
       std::fill( std::begin(track_.hitOdd), std::end(track_.hitOdd),false);
       std::fill( std::begin(track_.hitEven), std::end(track_.hitEven),false);
-    std::cout<<"2"<<std::endl;
 
       for ( int i= 0 ; i< 3 ; i++) {
         for ( int j= 0 ; j<2 ; j++) {
@@ -154,10 +152,8 @@ void GEMDigiTrackMatch::analyze(const edm::Event& iEvent, const edm::EventSetup&
         else { std::cout<<"Error to get chamber id"<<std::endl;}
 
         track_.gem_sh[ id.station()-1][ (id.layer()-1)] = true;
-        std::cout<<"true hit"<<std::endl;
 
       }
-    std::cout<<"3"<<std::endl;
       // ** GEM Digis, Pads and CoPads ** //
       const auto gem_dg_ids_ch = match_gd.chamberIds();
 
@@ -165,16 +161,13 @@ void GEMDigiTrackMatch::analyze(const edm::Event& iEvent, const edm::EventSetup&
       {
         const GEMDetId id(d);
         track_.gem_dg[ id.station()-1][ (id.layer()-1)] = true;
-        std::cout<<"true hit"<<std::endl;
       }
       const auto gem_pad_ids_ch = match_gd.chamberIdsWithPads();
       for(auto d: gem_pad_ids_ch)
       {
         const GEMDetId id(d);
         track_.gem_pad[ id.station()-1][ (id.layer()-1)] = true;
-        std::cout<<"true hit"<<std::endl;
       }
-    std::cout<<"4"<<std::endl;
 
 
       FillWithTrigger( track_eta, fabs(track_.eta)) ;

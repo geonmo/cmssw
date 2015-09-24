@@ -42,7 +42,7 @@ public:
   unsigned int nStationForLabel() { return nstationForLabel;  }
   unsigned int nPart() { return npart;  }
 
-  void setNStationForLabel(unsigned int number) { nstation = number; } 
+  void setNStationForLabel(unsigned int number) { nstationForLabel = number; } 
 protected:
   int nBinXY_;
   std::vector<double> nBinZR_;

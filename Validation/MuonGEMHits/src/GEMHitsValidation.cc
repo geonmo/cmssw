@@ -220,7 +220,10 @@ void GEMHitsValidation::analyze(const edm::Event& e,
       gem_sh_xy[(int)(region/2.+0.5)][station-1][layer_num]->Fill(g_x,g_y);
       gem_sh_tof[(int)(region/2.+0.5)][station-1][layer_num]->Fill(timeOfFlight);
       gem_sh_eloss[(int)(region/2.+0.5)][station-1][layer_num]->Fill(energyLoss*1.e9);
-
+      if (abs(hits-> particleType()) == 13) {
+        gem_sh_tofMu[(int)(region/2.+0.5)][station-1][layer_num]->Fill(timeOfFlight);
+        gem_sh_elossMu[(int)(region/2.+0.5)][station-1][layer_num]->Fill(energyLoss*1.e9);
+      }
       std::string chamber ="";
       if ( id.chamber() %2 == 1 ) chamber = "odd";
       else  chamber = "even";

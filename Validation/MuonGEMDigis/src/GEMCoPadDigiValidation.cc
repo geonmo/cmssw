@@ -75,7 +75,6 @@ void GEMCoPadDigiValidation::bookHistograms(DQMStore::IBooker & ibooker, edm::Ru
             
           if ( st == 1 ) nPads = npadsGE11;
           else nPads = npadsGE21;
-
           name_prefix  = getSuffixName( re, st) ;
           label_prefix = getSuffixTitle( re, st) ;
           theCSCCoPad_phipad[region_num][station_num] = ibooker.book2D( ("copad_dg_phipad"+name_prefix).c_str(), ("Digi occupancy: "+label_prefix+"; phi [rad]; Pad number").c_str(), 280,-PI,PI, nPads/2,0,nPads );

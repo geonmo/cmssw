@@ -145,8 +145,8 @@ MonitorElement* GEMBaseValidation::BookHistXY( DQMStore::IBooker& ibooker, const
     hist_title = label+string(" occupancy : ")+getSuffixTitle( region_num, station_num+1, layer_num+1 )+ " ; globalX [cm]; globalY[cm]"; 
   }
   else {
-    hist_name  = name+string("_xy") + getSuffixName( region_num+1, station_num+1);
-    hist_title = label+string(" occupancy : region")+getSuffixTitle( region_num+1, station_num+1) +" ; globalX [cm]; globalY[cm]";
+    hist_name  = name+string("_xy") + getSuffixName( region_num, station_num+1);
+    hist_title = label+string(" occupancy : region")+getSuffixTitle( region_num, station_num+1) +" ; globalX [cm]; globalY[cm]";
   } 
   return ibooker.book2D( hist_name, hist_title, nBinXY_, -360,360,nBinXY_,-360,360); 
 }

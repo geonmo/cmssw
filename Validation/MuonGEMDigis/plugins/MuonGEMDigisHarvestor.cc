@@ -130,45 +130,14 @@ MuonGEMDigisHarvestor::dqmEndJob(DQMStore::IBooker& ibooker, DQMStore::IGetter& 
 
 
   // simplePlots
-  /*
-  for( int region = -1 ; region <= 1 ; region = region+2) {
-    for ( int station = 0 ; station <2 ; station++) {
-      if ( station ==1 ) station=2 ;
-      TString dcEta_label = TString::Format("%s%s_r%d%s",dbe_path_.c_str(),dbe_hist_prefix_.c_str(), region, s_suffix[station].c_str());
-      TString denum_dcEta_label = TString::Format("%s%s_r%d%s",compareable_dbe_path_.c_str(),compareable_dbe_hist_prefix_.c_str(), region, s_suffix[station].c_str());
-
- 
-        if ( ig.get( dcEta_label.Data()) != nullptr && ig.get( denum_dcEta_label.Data()) != nullptr) {
-        TH2F* dcEta = (TH2F*)ig.get( dcEta_label.Data())->getTH2F()->Clone();
-        TH2F* denum_dcEta = (TH2F*)ig.get( denum_dcEta_label.Data())->getTH2F()->Clone();
-        dcEta->Divide(denum_dcEta);
-        TH2F* eff_dcEta = (TH2F*)dcEta->Clone();
-
-        TString eff_dcEta_title = TString::Format("Hits Efficiency on detector component at r%d%s",region,s_suffix[station].c_str());
-        TString eff_dcEta_label = TString::Format("eff_DigiHit_r%d%s",region,s_suffix[station].c_str());
-
-     
-        eff_dcEta->SetName( eff_dcEta_label.Data());
-        eff_dcEta->SetTitle( eff_dcEta_title.Data());
-
-        ibooker.book2D(eff_dcEta->GetName(), eff_dcEta);
-      }
-      else {
-        std::cout<<"Failed to get histograms"<<std::endl;
-        std::cout<<dcEta_label<<std::endl;
-        std::cout<<denum_dcEta_label<<std::endl;
-      }
-    }
-  }
-  */
-
-  if ( ig.get( "sim_dcEta_trk_r-1_st1") != nullptr) {
+  std::string plotname = dbe_path_+"sim_dcEta_trk_r-1_st1";
+  if ( ig.get( plotname.c_str()) != nullptr) {
     for( Int_t region  = -1; region <=1 ; region= region+2) {
       for( Int_t station = 1 ; station <=2 ; station++) {
-        TH2F* simHit_trk     = (TH2F*)ig.get(TString::Format("sim_dcEta_trk_r%d_st%d",  region, station).Data())->getTH2F()->Clone();
-        TH2F* stripHit_trk   = (TH2F*)ig.get(TString::Format("strip_dcEta_trk_r%d_st%d",region, station).Data())->getTH2F()->Clone();
-        TH2F* padHit_trk     = (TH2F*)ig.get(TString::Format("pad_dcEta_trk_r%d_st%d",  region, station).Data())->getTH2F()->Clone();
-        TH2F* copadHit_trk   = (TH2F*)ig.get(TString::Format("copad_dcEta_trk_r%d_st%d",region, station).Data())->getTH2F()->Clone();
+        TH2F* simHit_trk     = (TH2F*)ig.get(dbe_path_+TString::Format("sim_dcEta_trk_r%d_st%d",  region, station).Data())->getTH2F()->Clone();
+        TH2F* stripHit_trk   = (TH2F*)ig.get(dbe_path_+TString::Format("strip_dcEta_trk_r%d_st%d",region, station).Data())->getTH2F()->Clone();
+        TH2F* padHit_trk     = (TH2F*)ig.get(dbe_path_+TString::Format("pad_dcEta_trk_r%d_st%d",  region, station).Data())->getTH2F()->Clone();
+        TH2F* copadHit_trk   = (TH2F*)ig.get(dbe_path_+TString::Format("copad_dcEta_trk_r%d_st%d",region, station).Data())->getTH2F()->Clone();
 
         stripHit_trk->Divide( simHit_trk);
         padHit_trk  ->Divide( simHit_trk);
@@ -177,13 +146,13 @@ MuonGEMDigisHarvestor::dqmEndJob(DQMStore::IBooker& ibooker, DQMStore::IGetter& 
         TH2F* eff_padHit_trk = (TH2F*)padHit_trk->Clone();
         TH2F* eff_copadHit_trk = (TH2F*)copadHit_trk->Clone();
 
-        TString title_strip = TString::Format("eff_strip_dcEta_trk_r%d_st%d", region, station);
-        TString title_pad = TString::Format("eff_pad_dcEta_trk_r%d_st%d", region, station);
-        TString title_copad = TString::Format("eff_copad_dcEta_trk_r%d_st%d", region, station);
+        TString histname_strip = TString::Format("eff_strip_dcEta_trk_r%d_st%d", region, station);
+        TString histname_pad = TString::Format("eff_pad_dcEta_trk_r%d_st%d", region, station);
+        TString histname_copad = TString::Format("eff_copad_dcEta_trk_r%d_st%d", region, station);
 
-        TString histname_strip = TString::Format("Simple Eff. for strip vs simhit at Region%d Station%d", region, station);
-        TString histname_pad = TString::Format("Simple Eff. for pad vs simhit at Region%d Station%d", region, station);
-        TString histname_copad = TString::Format("Simple Eff. for copad vs simhit at Region%d Station%d", region, station);
+        TString title_strip = TString::Format("Simple Eff. for strip vs simhit at Region%d Station%d", region, station);
+        TString title_pad   = TString::Format("Simple Eff. for   pad vs simhit at Region%d Station%d", region, station);
+        TString title_copad = TString::Format("Simple Eff. for copad vs simhit at Region%d Station%d", region, station);
 
         eff_stripHit_trk->SetName(histname_strip.Data());
         eff_padHit_trk->SetName(histname_pad.Data());
@@ -193,9 +162,9 @@ MuonGEMDigisHarvestor::dqmEndJob(DQMStore::IBooker& ibooker, DQMStore::IGetter& 
         eff_padHit_trk->SetTitle(title_pad.Data());
         eff_copadHit_trk->SetTitle(title_copad.Data());
 
-        ibooker.book2D( eff_stripHit_trk->GetName(), eff_stripHit_trk->GetTitle(), eff_stripHit_trk );
-        ibooker.book2D( eff_padHit_trk->GetName(), eff_padHit_trk->GetTitle(), eff_padHit_trk );
-        ibooker.book2D( eff_copadHit_trk->GetName(), eff_copadHit_trk->GetTitle(), eff_copadHit_trk );
+        ibooker.book2D( eff_stripHit_trk->GetName(), eff_stripHit_trk );
+        ibooker.book2D( eff_padHit_trk->GetName()  , eff_padHit_trk );
+        ibooker.book2D( eff_copadHit_trk->GetName(), eff_copadHit_trk );
       }
     }
   }

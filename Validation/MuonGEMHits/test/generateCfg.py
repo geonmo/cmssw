@@ -37,15 +37,15 @@ process.gemRecHitTrackValidation.detailPlot = cms.bool(True)
 ### setup Option parser.
 
 parser = OptionParser()
-parser.add_option("-c","--condition",   action="store",   dest="condition",   default="auto:run2_design")
-parser.add_option("-m","--magField",    action="store",   dest="magField",    default="38T_PostLS1")
-parser.add_option("-g","--geometry",    action="store",   dest="geometry",    default="Extended2015MuonGEMDev,Extended2015MuonGEMDevReco")
+parser.add_option("-c","--condition",   action="store",   dest="condition",   default="auto:run2_design", help="Setup GlobalTag. Default is [auto:run2_design]", metavar="GLOBALTAG" )
+parser.add_option("-m","--magField",    action="store",   dest="magField",    default="38T_PostLS1", help="Magentic Field. Default is [38T_PostLS1]")
+parser.add_option("-g","--geometry",    action="store",   dest="geometry",    default="Extended2015MuonGEMDev,Extended2015MuonGEMDevReco", help="Set the geometry(include GEM). Default : [Extended2015MuonGEMDev,Extended2015MuonGEMDevReco]")
 parser.add_option("-u","--customise",   action="store",   dest="customise",   default="SLHCUpgradeSimulations/Configuration/gemCustom.customise2023,Geometry/GEMGeometry/gemGeometryCustoms.custom_%s")
 #parser.add_option("-1","--10",          action="store_",   dest="version",     default="GE21_v7")
-parser.add_option("-n","--maxEvents",   action="store",   dest="maxEvents",   default="100")
-parser.add_option("--era",              action="store",   dest="era",         default="Run2_25ns")
-parser.add_option("-t","--detailPlot",  action="store_true",   dest="detailPlot",   default=False)
-parser.add_option("-b","--noBkgNoise",  action="store_true",   dest="noBkgNoise",   default=False)
+parser.add_option("-n","--maxEvents",   action="store",   dest="maxEvents",   default="100", help="Number of Events. Default is [100]")
+parser.add_option("--era",              action="store",   dest="era",         default="Run2_25ns", help="--era options for cmsDrvier. Default is [Run2_25ns]")
+parser.add_option("-t","--detailPlot",  action="store_true",   dest="detailPlot",   default=False, help="Turn on to draw detailPlot")
+parser.add_option("-b","--noBkgNoise",  action="store_true",   dest="noBkgNoise",   default=False, help="Turn on to remove BkgNoise")
 
 (options, args) = parser.parse_args()
 

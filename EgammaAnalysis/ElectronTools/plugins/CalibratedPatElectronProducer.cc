@@ -280,7 +280,7 @@ void CalibratedPatElectronProducer::produce( edm::Event & event, const edm::Even
                             std::cout << "[CalibratedPATElectronProducer] "
                             << "You choose regression combination." << std::endl;
                         }
-                	    myEpCombinationTool->combine(mySimpleElectron, applyExtraHighEnergyProtection);
+                	    myEpCombinationTool->combine(mySimpleElectron);
                         theEnCorrector->correctLinearity(mySimpleElectron);
                 	    break;
                 	default:

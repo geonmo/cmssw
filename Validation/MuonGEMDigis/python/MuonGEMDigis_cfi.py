@@ -53,4 +53,4 @@ gemGeometryChecker = cms.EDAnalyzer('GEMCheckGeometry',
   detailPlot = cms.bool(False), 
 )
 
-gemDigiValidation = cms.Sequence( gemStripValidation+gemPadValidation+gemCoPadValidation+gemDigiTrackValidation+gemGeometryChecker)
+gemDigiValidation = cms.Sequence( gemStripValidation+gemPadValidation+gemCoPadValidation+gemGeometryChecker)

@@ -9,11 +9,12 @@ common_option='--conditions auto:run2_mc --magField 38T_PostLS1 --datatier GEN-S
 
 
 ## For GE21 v7 20deg
-#cmsDriver.py SingleMuPt100_cfi -s GEN,SIM,DIGI,L1 --conditions auto:run2_design --magField 38T_PostLS1 --datatier GEN-SIM-DIGI --geometry Extended2015MuonGEMDev,Extended2015MuonGEMDevReco --eventcontent FEVTDEBUGHLT  --customise=SimMuon/GEMDigitizer/customizeGEMDigi.customize_digi_addGEM_muon_only,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixRPCConditions,SLHCUpgradeSimulations/Configuration/gemCustom.customise2023,Geometry/GEMGeometry/gemGeometryCustoms.custom_GE21_v7,SLHCUpgradeSimulations/Configuration/me0Customs.customise_Digi -n 100 --no_exec --fileout out_digi.root --python_filename SingleMuPt100_cfi_GEM-SIM-DIGI_Extended2015_GE21v7_cfg.py --era Run2_25ns
 
-cmsDriver.py validation -n -1 -s VALIDATION:ValidationGEMOnly Geometry/GEMGeometry/gemGeometryCustoms.custom_GE21_v7 --datatier GEN-SIM-DIGI ${common_option} --no_exec --filein file:out_recodone.root --fileout file:out_valid.root --python_filename=valid_GE21v7_cfg.py 
+cmsDriver.py SingleMuPt100_cfi -s GEN,SIM,DIGI,L1,DIGI2RAW,RAW2DIGI,L1Reco,RECO ${common_option} -n 2000 --fileout out_recodone.root --no_exec
 
-cmsDriver.py harvest -n -1 -s HARVESTING:postValidation --customise Geometry/GEMGeometry/gemGeometryCustoms.custom_GE21_v7 --datatier GEN-SIM-DIGI ${common_option} --no_exec --filein file:out_valid.root --python_filename=harvest_GE21_v7_cfg.py
+cmsDriver.py validation -n -1 -s VALIDATION:ValidationGEMOnly --datatier GEN-SIM-DIGI ${common_option} --no_exec --filein file:out_recodone.root --fileout file:out_valid.root --python_filename=valid_GE21v7_cfg.py 
+
+cmsDriver.py harvest -n -1 -s HARVESTING:postValidationGEMOnly --datatier GEN-SIM-DIGI ${common_option} --no_exec --filein file:out_valid.root --python_filename=harvest_GE21_v7_cfg.py
 
 ## For GE21 v7 10deg
 #cmsDriver.py SingleMuPt100_cfi -s GEN,SIM,DIGI,L1 --conditions auto:run2_design --magField 38T_PostLS1 --datatier GEN-SIM-DIGI --geometry Extended2015MuonGEMDev,Extended2015MuonGEMDevReco --eventcontent FEVTDEBUGHLT  --customise=SimMuon/GEMDigitizer/customizeGEMDigi.customize_digi_addGEM_muon_only,SLHCUpgradeSimulations/Configuration/fixMissingUpgradeGTPayloads.fixRPCConditions,SLHCUpgradeSimulations/Configuration/gemCustom.customise2023,Geometry/GEMGeometry/gemGeometryCustoms.custom_GE21_v7_10deg,SLHCUpgradeSimulations/Configuration/me0Customs.customise_Digi -n 100 --no_exec --fileout out_digi.root --python_filename SingleMuPt100_cfi_GEM-SIM-DIGI_Extended2015_GE21v7_10deg_cfg.py --era Run2_25ns

@@ -69,6 +69,14 @@ postValidationMiniAOD = cms.Sequence(
       electronPostValidationSequenceMiniAOD
 )
 
+from Validation.MuonGEMHits.PostProcessor_cff import *
+from Validation.MuonGEMDigis.PostProcessor_cff import *
+from Validation.MuonGEMRecHits.PostProcessor_cff import *
+
+postValidationGEMOnly = cms.Sequence(
+      MuonGEMHitsPostProcessors+MuonGEMDigisPostProcessors+MuonGEMRecHitsPostProcessors
+)
+
 def _modifyPostValidationForPhase2( theProcess ):
     theProcess.load('Validation.MuonGEMHits.PostProcessor_cff')
     theProcess.load('Validation.MuonGEMDigis.PostProcessor_cff')

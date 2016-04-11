@@ -120,6 +120,9 @@ globalPrevalidationTrackingOnly = cms.Sequence(
 )
 globalValidationTrackingOnly = cms.Sequence()
 
+from Validation.Configuration.gemSimValid_cff import *
+ValidationGEMOnly = cms.Sequence(gemSimValid+me0SimValid) 
+
 def _modifyGlobalValidationForPhase2( theProcess ):
     theProcess.load('Validation.Configuration.gemSimValid_cff')
     theProcess.globalValidation += theProcess.gemSimValid
